@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_custom_drop_down_list/defaults.dart';
 
 class ListItem<T> extends StatelessWidget {
@@ -19,14 +20,26 @@ class ListItem<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(Defaults.spacing),
-          child: Text(title),
-        ),
-      ),
-    );
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          child: FocusableActionDetector(
+            shortcuts: <LogicalKeySet, Intent>{
+              LogicalKeySet(LogicalKeyboardKey.enter):
+                  VoidCallbackIntent(onTap ?? () {})
+            },
+            actions: <Type, Action<Intent>>{
+              VoidCallbackIntent:
+                  CallbackAction<VoidCallbackIntent>(onInvoke: (intent) {
+                onTap?.call();
+                return null;
+              })
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(Defaults.spacing),
+              child: Text(title),
+            ),
+          ),
+        ));
   }
 }
