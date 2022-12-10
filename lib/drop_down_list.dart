@@ -38,7 +38,10 @@ class _DropDownListState<T> extends State<DropDownList<T>> {
   void initState() {
     super.initState();
     if (widget.listItems.isNotEmpty) {
-      _selected = widget.value == null ? widget.listItems.first : widget.listItems.firstWhereOrNull((listItem) => listItem.value == widget.value);
+      _selected = widget.value == null
+          ? widget.listItems.first
+          : widget.listItems
+              .firstWhereOrNull((listItem) => listItem.value == widget.value);
     }
   }
 
@@ -51,18 +54,25 @@ class _DropDownListState<T> extends State<DropDownList<T>> {
         child: FocusableActionDetector(
           focusNode: _focusNode,
           mouseCursor: SystemMouseCursors.click,
+          shortcuts: <LogicalKeySet, Intent>{
+            LogicalKeySet(LogicalKeyboardKey.enter): VoidCallbackIntent(_onTap)
+          },
           actions: {
             ActivateIntent: CallbackAction<Intent>(onInvoke: (_) => _onTap()),
           },
-          onShowFocusHighlight: (isFocused) => setState(() => _isFocused = isFocused),
-          onShowHoverHighlight: (isHovered) => setState(() => _isHovered = isHovered),
+          onShowFocusHighlight: (isFocused) =>
+              setState(() => _isFocused = isFocused),
+          onShowHoverHighlight: (isHovered) =>
+              setState(() => _isHovered = isHovered),
           child: Container(
             key: _key,
             padding: const EdgeInsets.all(Defaults.spacing),
             decoration: BoxDecoration(
               color: Defaults.background,
               border: Border.all(
-                color: _isHovered || _isFocused || _isOverlayShown ? Defaults.active : Defaults.normal,
+                color: _isHovered || _isFocused || _isOverlayShown
+                    ? Defaults.active
+                    : Defaults.normal,
                 width: Defaults.edge,
               ),
               borderRadius: BorderRadius.circular(Defaults.radius),
